@@ -1,6 +1,21 @@
-﻿@{
+﻿@model IEnumerable<NETCORE.Models.UserAuthentication>;
+@{
     ViewData["Title"] = "Privacy Policy";
 }
 <h1>@ViewData["Title"]</h1>
 
 <p>Use this page to detail your site's privacy policy.</p>
+@{
+
+    var sessionUser = ViewBag.UserAuthentication;
+    if (sessionUser.Count > 0)
+    {
+        foreach (var item in sessionUser)
+        {
+            <p>@item.Username.ToString()</p>
+        }
+    }
+
+}
+
+

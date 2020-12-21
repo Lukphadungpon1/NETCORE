@@ -1,0 +1,284 @@
+﻿@model IEnumerable<NETCORE.Models.ListMenu>;
+
+@{
+    ViewData["Title"] = "User Information";
+    string[] ListmenuHeaders = new string[] { "t1", "t2", "t3", "t4" };
+
+
+}
+
+
+<h1>User Information</h1>
+<table class="table-bordered table-hover">
+    <thead>
+        <tr>
+            @{
+                foreach (var head in ListmenuHeaders)
+                {
+                    <th scope="col">@head</th>
+                }
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            if (Model != null)
+            {
+                foreach (var Data in Model)
+                {
+                    <tr>
+                        <td>@Data.t1</td>
+                        <td>@Data.t2</td>
+                        <td>@Data.t3</td>
+                        <td>@Html.DisplayFor(m => Data.t4)</td>
+                    </tr>
+                }
+            }
+        }
+    </tbody>
+</table>
+
+<button type="button" class="btn btn-primary" id="btnSend" onclick="updateemp()"> Employee</button>
+<button type="button" class="btn btn-primary" id="btnSend" onclick="getAllData()">Search Employee</button>
+<table class="table table table-bordered table-hover" id="EmployeeTB">
+    <thead>
+        <tr class="table-primary">
+            <th>EmpCode</th>
+            <th>Name Lname (TH)</th>
+            <th>Name Lname (EN)</th>
+            <th>Position</th>
+            <th>Department</th>
+            <th>Section</th>
+            <th>StartDates</th>
+            <th>Status</th>
+            <th>Email</th>
+            <th>UsernameAD</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody id="EmployeeTBD">
+    </tbody>
+</table>
+
+
+<!-- The Modal -->
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Add or Edit</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-4 col-form-label">EmpCode</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control-plaintext" id="empCode" value="">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-4 col-form-label">Name-Lname (TH)</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control-plaintext" id="nameTH" value="">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-4 col-form-label">Name-Lname (EN)</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control-plaintext" id="nameEN" value="">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-4 col-form-label">Position</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control-plaintext" id="nameEN" value="">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-4 col-form-label">Department</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="department">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-4 col-form-label">Section</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="section">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-4 col-form-label">Work Start</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control-plaintext" id="nameEN" value="">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-4 col-form-label">Status</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="status">
+                                <option>1</option>
+                                <option>2</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-4 col-form-label">Email</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control-plaintext" id="email" value="">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword" class="col-sm-4 col-form-label">Username</label>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control" id="usernameAD" placeholder="Password">
+                        </div>
+                    </div>
+                </form>
+
+
+
+
+
+
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="updateemp()">Save</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+
+    function getAllData() {
+        $.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            //data: "{product:" + JSON.stringify(json) + "}",
+            url: "api/Employee",
+            success: function (data) {
+                //alert("product name :" + data);
+                $.each(data, function (index, item) {
+                    $("<tr>").append(
+                        $("<td>").text(item.empCode),
+                        $("<td>").text(item.nameTH + '-' + item.lnameTH),
+                        $("<td>").text(item.nameEN + '-' + item.lnameEN),
+                        $("<td>").text(item.position),
+                        $("<td>").text(item.department),
+                        $("<td>").text(item.section),
+                        $("<td>").text(item.workDate),
+                        $("<td>").text(item.status),
+                        $("<td>").text(item.email),
+                        $("<td>").text(item.usernameAD),
+                        $("<td>").html("<a href='#' data-toggle='modal' data-target='#myModal' onclick='editscreen(this)'><i class='fa fa-list' aria-hidden='true'></i></a>"),
+                        $("<td class='text-center'>").html("<a href='#' onclick='delectscreen(this)'><i class='fa fa-trash' aria-hidden='true'></i></a>")
+
+                    ).appendTo("#EmployeeTB tbody");
+                });
+
+                //convertJsonToHtmlTable(JSON.parse(data), $("#EmployeeTB"));
+            },
+            error:
+                function (response) {
+                    alert("Error: " + response);
+                }
+        });
+    }
+
+
+    function editscreen(rowid) {
+        var tableRow = rowid.parentElement.parentElement;
+
+        alert(document.getElementById("EmployeeTBD").rows[parseInt(tableRow.rowIndex) - 1].cells[1].innerHTML);
+    }
+
+    function updateemp() {
+
+        var obj = {};
+        obj.empCode = '1111';
+        obj.nameTH = '1111';
+        obj.lnameTH = '1111';
+        obj.nameEN = '1111';
+        obj.lnameEN = '1111';
+        obj.position = '1111';
+        obj.department = '1111';
+        obj.section = '1111';
+        obj.workDate = '2020-12-12';
+        obj.status = '1';
+        obj.email = 'aaaa@gmail.com';
+        obj.usernameAD = '1111';
+
+        alert('aaaa');
+
+        $.ajax(
+            {
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                url: 'api/Employee',
+                data: JSON.stringify(obj),
+                success:
+                    function (response) {
+                        alert(response);
+                        // Generate HTML table.
+                        //convertJsonToHtmlTable(JSON.parse(response), $("#TableId"));
+                    },
+                error:
+                    function (response) {
+                        alert("Error: " + response);
+                    }
+            });
+
+    }
+
+
+    function delectscreen() {
+        alert('cccc');
+    }
+
+    //$(document).ready(function () {
+    //    $("#btnSend").click(function () {
+    //        var json = { Name: 'go feelring' };
+    //        alert("aaaa");
+    //        $.ajax({
+    //            type: "GET",
+    //            contentType: "application/json; charset=utf-8",
+    //            //data: "{product:" + JSON.stringify(json) + "}",
+    //            url: "api/Employee",
+    //            success: function (data) {
+    //                //alert("product name :" + data);
+    //                convertJsonToHtmlTable(JSON.parse(data), $("#EmployeeTB"));
+    //            },
+    //            error:
+    //                function (response) {
+    //                    alert("Error: " + response);
+    //                }
+    //        });
+    //    });
+
+    //});
+
+</script>
